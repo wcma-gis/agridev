@@ -1,26 +1,31 @@
 import streamlit as st
+import pandas as pd
+import folium
+from streamlit_folium import st_folium
 import config
-import openai_utils
-import st_utils
-import chat_engine
 
-st_utils.init_st()
+st.set_page_config(layout="wide")
 
-client = openai_utils.get_client(config.api_key)
-chat_engine.initialize_session(client, config.base_csv_path, config.station_name)
+st.title("Select a Station")
 
-st_utils.render_title_and_intro(
-    config.station_name,
-    st.session_state.start_date,
-    st.session_state.end_date
-)
+df = pd.read_csv(config.station_csv_path)
 
-st_utils.render_chat_history()
+center_lat = df["lat"].mean()
+center_lon = df["lon"].mean()
 
-user_input = st.chat_input("Ask your question")
+m = folium.Map(location=[center_lat, center_lon], zoom_start=6)
 
-if user_input:
-    with st.chat_message("user"):
-        st.markdown(user_input)
+for _, row in df.iterrows():
+    folium.Marker(
+        location=[row["lat"], row["lon"]],
+        popup=row["station"],
+        tooltip=row["station"]
+    ).add_to(m)
 
-    chat_engine.handle_user_input(client, config.assistant_id, user_input)
+map_data = st_folium(m, width=700, height=500)
+
+if map_data.get("last_object_clicked_popup"):
+    station = map_data["last_object_clicked_popup"]
+    st.session_state.selected_station = station
+    st.success(f"Launching AgriBot for station: {station}")
+    st.stop()
