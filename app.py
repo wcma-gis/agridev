@@ -4,6 +4,8 @@ import openai_utils
 import st_utils
 import chat_engine
 
+st_utils.init_st()
+
 client = openai_utils.get_client(config.api_key)
 chat_engine.initialize_session(client, config.base_csv_path, config.station_name)
 
