@@ -4,20 +4,20 @@ import openai_utils
 import st_utils
 import config
 
-
 def initialize_session(client, base_csv_path, station_name):
     if (
-        "thread_id" not in st.session_state or
-        "file_id" not in st.session_state or
-        not openai_utils.ensure_valid_file(client, st.session_state.file_id) or
-        st.session_state.get("active_station") != station_name
+            "thread_id" not in st.session_state or
+            "file_id" not in st.session_state or
+            not openai_utils.ensure_valid_file(client, st.session_state.file_id) or
+            st.session_state.get("active_station") != station_name
     ):
+        print("station_name:",station_name)
         df = data_utils.load_and_filter_data(base_csv_path, station_name)
-
-        print(f"{station_name}: {len(df)}")
 
         if len(df) == 0:
             return False
+
+        print("len(df): ", len(df))
 
         data_utils.save_filtered_csv(df)
 
@@ -33,15 +33,8 @@ def initialize_session(client, base_csv_path, station_name):
         st.session_state.chat_history = []
         st.session_state.active_station = station_name
 
-        if "prev_file_id" in st.session_state and st.session_state.prev_file_id != uploaded.id:
-            try:
-                client.files.delete(st.session_state.prev_file_id)
-            except:
-                pass
-        st.session_state.prev_file_id = uploaded.id
-
+        openai_utils.delete_old_files(client, uploaded.id)
     return True
-
 
 
 

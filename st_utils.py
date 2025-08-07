@@ -1,34 +1,5 @@
 import streamlit as st
 import base_ulits
-import config
-
-def print_assistant_status():
-    all_assistants = set(config.assistant_pool.values())
-    used = set(st.session_state.get("used_assistants", []))
-    free = all_assistants - used
-
-    print("🟢 Free assistants:", len(list(free)), list(free))
-    print("🔴 Used assistants:", len(list(used)), list(used))
-
-def allocate_assistant():
-    for name, aid in config.assistant_pool.items():
-        used = st.session_state.get("used_assistants", [])
-        if aid not in used:
-            print(f"Allocated: {aid}")
-            st.session_state.used_assistants = used + [aid]
-            print_assistant_status()
-            return aid
-    return None
-
-def free_assistant():
-    if "assistant_id" in st.session_state and "used_assistants" in st.session_state:
-        st.session_state.used_assistants = [
-            aid for aid in st.session_state.used_assistants
-            if aid != st.session_state.assistant_id
-        ]
-        print(f"Free: {st.session_state.assistant_id}")
-        del st.session_state.assistant_id
-        print_assistant_status()
 
 def render_title_and_intro(station_name, start_date, end_date):
     st.set_page_config(
@@ -41,7 +12,6 @@ def render_title_and_intro(station_name, start_date, end_date):
     start_date = base_ulits.to_readable_date(start_date)
     end_date = base_ulits.to_readable_date(end_date)
     if st.button("← Select another station"):
-        free_assistant()
         st.switch_page("app.py")
     st.title(f"AgriBot — Station: {station_name}")
     if not st.session_state.chat_history:
