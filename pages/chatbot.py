@@ -15,20 +15,24 @@ if "selected_station" not in st.session_state:
 station_name = st.session_state.selected_station
 
 client = openai_utils.get_client(config.api_key)
-chat_engine.initialize_session(client, config.base_csv_path, station_name)
+if not chat_engine.initialize_session(client, config.base_csv_path, station_name):
+    st.error(f"No data available for station: {station_name}")
+    if st.button("← Select another station"):
+        st.switch_page("app.py")
+    st.stop()
+else:
+    st_utils.render_title_and_intro(
+        station_name,
+        st.session_state.start_date,
+        st.session_state.end_date
+    )
 
-st_utils.render_title_and_intro(
-    station_name,
-    st.session_state.start_date,
-    st.session_state.end_date
-)
+    st_utils.render_chat_history()
 
-st_utils.render_chat_history()
+    user_input = st.chat_input("Ask your question")
 
-user_input = st.chat_input("Ask your question")
+    if user_input:
+        with st.chat_message("user"):
+            st.markdown(user_input)
 
-if user_input:
-    with st.chat_message("user"):
-        st.markdown(user_input)
-
-    chat_engine.handle_user_input(client, config.assistant_id, user_input)
+        chat_engine.handle_user_input(client, config.assistant_id, user_input)

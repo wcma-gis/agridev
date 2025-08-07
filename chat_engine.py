@@ -14,8 +14,7 @@ def initialize_session(client, base_csv_path, station_name):
         df = data_utils.load_and_filter_data(base_csv_path, station_name)
 
         if len(df) == 0:
-            st.error(f"No data available for station: {station_name}")
-            st.stop()
+            return False
 
         print("len(df): ", len(df))
 
@@ -33,6 +32,7 @@ def initialize_session(client, base_csv_path, station_name):
         st.session_state.chat_history = []
 
         openai_utils.delete_old_files(client, uploaded.id)
+        return True
 
 
 def handle_user_input(client, assistant_id, user_input):

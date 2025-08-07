@@ -1,6 +1,6 @@
 import pandas as pd
 
-base_csv_path = "all.csv"
+base_csv_path = "../more_data/all.csv"
 df = pd.read_csv(base_csv_path)
-df = df[df["station"] == "Dooen 2"]
-df.to_csv("all_small.csv", index=False)
+df = df[df["station"] == "Clearlake"]
+print(len(df))
