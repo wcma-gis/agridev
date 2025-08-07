@@ -2,6 +2,12 @@ import streamlit as st
 import base_ulits
 
 def render_title_and_intro(station_name, start_date, end_date):
+    st.set_page_config(
+        page_title=f"AgriBot - {station_name}",
+        layout="wide",
+        initial_sidebar_state="collapsed"
+    )
+
     start_date = base_ulits.to_readable_date(start_date)
     end_date = base_ulits.to_readable_date(end_date)
     if st.button("← Select another station"):

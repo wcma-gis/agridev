@@ -4,6 +4,12 @@ import folium
 from streamlit_folium import st_folium
 import config
 
+st.set_page_config(
+    page_title="AgriBot - Home",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
