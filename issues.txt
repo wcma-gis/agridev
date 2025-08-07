@@ -1,0 +1,35 @@
+Bugs
+===
+
+Auto-reset
+Agribot icon misplaced
+
+
+
+Improvements
+=============
+
+Speed up
+Caching?
+Multiple user/session
+Better handle old files
+Reuse knowledge instead of again and again file upload?
+Responsive
+Saved session - Guest or user
+Login?
+
+Leaflet
+API - real time
+
+Check
+=====
+Prev conv in every conv?
+
+
+Side note
+==========
+Phil, Dave - share
+Document the process
+API call - before login check HTTP code for expiry
+
+
