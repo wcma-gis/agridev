@@ -1,14 +1,14 @@
 import streamlit as st
-from config import api_key, assistant_id, csv_path, station_name
+import config
 import openai_utils
 import st_utils
 import chat_engine
 
-client = openai_utils.get_client(api_key)
-chat_engine.initialize_session(client, csv_path, station_name)
+client = openai_utils.get_client(config.api_key)
+chat_engine.initialize_session(client, config.csv_path, config.station_name)
 
 st_utils.render_title_and_intro(
-    station_name,
+    config.station_name,
     st.session_state.start_date,
     st.session_state.end_date
 )
@@ -21,4 +21,4 @@ if user_input:
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    chat_engine.handle_user_input(client, assistant_id, user_input)
+    chat_engine.handle_user_input(client, config.assistant_id, user_input)

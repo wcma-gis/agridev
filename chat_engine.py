@@ -2,6 +2,7 @@ import streamlit as st
 import data_utils
 import openai_utils
 import st_utils
+import config
 
 def initialize_session(client, csv_path, station_name):
     if (
@@ -16,7 +17,7 @@ def initialize_session(client, csv_path, station_name):
         st.session_state.start_date = start_date
         st.session_state.end_date = end_date
 
-        uploaded = openai_utils.upload_file(client, "filtered.csv")
+        uploaded = openai_utils.upload_file(client, config.filtered_csv)
         thread = openai_utils.create_thread(client)
 
         st.session_state.thread_id = thread.id
