@@ -14,7 +14,9 @@ def ensure_valid_file(client, fid):
         return False
 
 def upload_file(client, path):
-    return client.files.create(file=open(path, "rb"), purpose="assistants")
+    uploaded = client.files.create(file=open(path, "rb"), purpose="assistants")
+    print("Uploaded File:", uploaded.id)
+    return uploaded
 
 def create_thread(client):
     return client.beta.threads.create()
@@ -23,6 +25,7 @@ def delete_old_files(client, keep_id):
     for f in client.files.list().data:
         if f.id != keep_id:
             client.files.delete(f.id)
+            print(f"Deleted file {f.id}")
 
 def send_message(client, thread_id, user_input, file_id=None, first=False):
     client.beta.threads.messages.create(
