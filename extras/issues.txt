@@ -42,3 +42,7 @@ go back
 circles
 
 if emppty - avoid
+
+not reloading csv once back
+
+link for 0

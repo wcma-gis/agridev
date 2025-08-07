@@ -10,7 +10,15 @@ def initialize_session(client, base_csv_path, station_name):
         "file_id" not in st.session_state or
         not openai_utils.ensure_valid_file(client, st.session_state.file_id)
     ):
+        print("station_name:",station_name)
         df = data_utils.load_and_filter_data(base_csv_path, station_name)
+
+        if len(df) == 0:
+            st.error(f"No data available for station: {station_name}")
+            st.stop()
+
+        print("len(df): ", len(df))
+
         data_utils.save_filtered_csv(df)
 
         start_date, end_date = data_utils.get_date_range(df)
@@ -25,6 +33,7 @@ def initialize_session(client, base_csv_path, station_name):
         st.session_state.chat_history = []
 
         openai_utils.delete_old_files(client, uploaded.id)
+
 
 def handle_user_input(client, assistant_id, user_input):
     loading_slot = st_utils.render_loading()
