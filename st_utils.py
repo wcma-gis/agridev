@@ -4,6 +4,8 @@ import base_ulits
 def render_title_and_intro(station_name, start_date, end_date):
     start_date = base_ulits.to_readable_date(start_date)
     end_date = base_ulits.to_readable_date(end_date)
+    if st.button("← Select another station"):
+        st.switch_page("app.py")
     st.title(f"AgriBot — Station: {station_name}")
     if not st.session_state.chat_history:
         st.markdown(

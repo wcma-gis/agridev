@@ -14,7 +14,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 st.title("Select a Station")
 
 df = pd.read_csv(config.station_csv_path)
