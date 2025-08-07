@@ -1,0 +1,51 @@
+import streamlit as st
+import data_utils
+import openai_utils
+import st_utils
+
+def initialize_session(client, csv_path, station_name):
+    if (
+        "thread_id" not in st.session_state or
+        "file_id" not in st.session_state or
+        not openai_utils.ensure_valid_file(client, st.session_state.file_id)
+    ):
+        df = data_utils.load_and_filter_data(csv_path, station_name)
+        data_utils.save_filtered_csv(df)
+
+        start_date, end_date = data_utils.get_date_range(df)
+        st.session_state.start_date = start_date
+        st.session_state.end_date = end_date
+
+        uploaded = openai_utils.upload_file(client, "filtered.csv")
+        thread = openai_utils.create_thread(client)
+
+        st.session_state.thread_id = thread.id
+        st.session_state.file_id = uploaded.id
+        st.session_state.chat_history = []
+
+        openai_utils.delete_old_files(client, uploaded.id)
+
+def handle_user_input(client, assistant_id, user_input):
+    loading_slot = st_utils.render_loading()
+    loading_slot.markdown("⏳ AgriBot is thinking...")
+
+    first = len(st.session_state.chat_history) == 0
+    openai_utils.send_message(
+        client,
+        st.session_state.thread_id,
+        user_input,
+        st.session_state.file_id,
+        first
+    )
+
+    openai_utils.run_assistant(client, st.session_state.thread_id, assistant_id)
+    reply_text, image_data = openai_utils.get_latest_response(client, st.session_state.thread_id)
+
+    loading_slot.empty()
+    st_utils.render_assistant_response(reply_text, image_data)
+
+    st.session_state.chat_history.append({
+        "user": user_input,
+        "assistant": reply_text,
+        "image": image_data
+    })
