@@ -31,10 +31,15 @@ center_lon = df["lon"].mean()
 m = folium.Map(location=[center_lat, center_lon], zoom_start=6)
 
 for _, row in df.iterrows():
-    folium.Marker(
+    folium.CircleMarker(
         location=[row["lat"], row["lon"]],
-        icon=folium.DivIcon(html=f"""<div style="font-size: 10pt">{row["site"]}</div>"""),
-        popup=row["site"]
+        radius=8,
+        color="blue",
+        fill=True,
+        fill_color="cyan",
+        fill_opacity=0.7,
+        popup=row["site"],
+        tooltip=row["site"]
     ).add_to(m)
 
 map_data = st_folium(m, width=700, height=500)
