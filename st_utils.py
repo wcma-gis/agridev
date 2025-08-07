@@ -3,6 +3,7 @@ import base_ulits
 
 def render_title_and_intro(station_name, start_date, end_date):
     st.set_page_config(
+        page_icon="🤖",
         page_title=f"AgriBot - {station_name}",
         layout="wide",
         initial_sidebar_state="collapsed"
