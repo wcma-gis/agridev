@@ -6,9 +6,10 @@ import config
 
 def initialize_session(client, base_csv_path, station_name):
     if (
-        "thread_id" not in st.session_state or
-        "file_id" not in st.session_state or
-        not openai_utils.ensure_valid_file(client, st.session_state.file_id)
+            "thread_id" not in st.session_state or
+            "file_id" not in st.session_state or
+            not openai_utils.ensure_valid_file(client, st.session_state.file_id) or
+            st.session_state.get("active_station") != station_name
     ):
         print("station_name:",station_name)
         df = data_utils.load_and_filter_data(base_csv_path, station_name)
@@ -30,9 +31,11 @@ def initialize_session(client, base_csv_path, station_name):
         st.session_state.thread_id = thread.id
         st.session_state.file_id = uploaded.id
         st.session_state.chat_history = []
+        st.session_state.active_station = station_name
 
         openai_utils.delete_old_files(client, uploaded.id)
-        return True
+    return True
+
 
 
 def handle_user_input(client, assistant_id, user_input):
