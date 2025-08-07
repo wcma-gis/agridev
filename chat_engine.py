@@ -4,13 +4,13 @@ import openai_utils
 import st_utils
 import config
 
-def initialize_session(client, csv_path, station_name):
+def initialize_session(client, base_csv_path, station_name):
     if (
         "thread_id" not in st.session_state or
         "file_id" not in st.session_state or
         not openai_utils.ensure_valid_file(client, st.session_state.file_id)
     ):
-        df = data_utils.load_and_filter_data(csv_path, station_name)
+        df = data_utils.load_and_filter_data(base_csv_path, station_name)
         data_utils.save_filtered_csv(df)
 
         start_date, end_date = data_utils.get_date_range(df)

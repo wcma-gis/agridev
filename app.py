@@ -5,7 +5,7 @@ import st_utils
 import chat_engine
 
 client = openai_utils.get_client(config.api_key)
-chat_engine.initialize_session(client, config.csv_path, config.station_name)
+chat_engine.initialize_session(client, config.base_csv_path, config.station_name)
 
 st_utils.render_title_and_intro(
     config.station_name,

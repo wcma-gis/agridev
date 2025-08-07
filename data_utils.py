@@ -2,8 +2,8 @@ import pandas as pd
 import config
 import os
 
-def load_and_filter_data(csv_path, station_name):
-    df = pd.read_csv(csv_path)
+def load_and_filter_data(base_csv_path, station_name):
+    df = pd.read_csv(base_csv_path)
     return df[df["station"] == station_name]
 
 def save_filtered_csv(df):
