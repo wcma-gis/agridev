@@ -3,6 +3,7 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 import config
+import openai_utils
 
 st.set_page_config(
     page_icon="🤖",
@@ -48,4 +49,18 @@ if map_data.get("last_object_clicked_popup"):
     station = map_data["last_object_clicked_popup"]
     st.session_state.selected_station = station
     st.switch_page("pages/chatbot.py")
+
+
+with st.expander("🛠️ Diagnostics"):
+    st.write("Session ID:", st.session_state.get("session_id"))
+    st.write("🗂️ File ID (current session):", st.session_state.get("file_id"))
+
+    if st.button("🔄 Refresh file list"):
+        st.session_state._show_files = True
+
+    if st.session_state.get("_show_files"):
+        st.write("📄 All files in account:")
+        files = openai_utils.get_all_files()
+        for f in files:
+            st.write(f"- {f.id} | {f.filename} | {f.created_at}")
 

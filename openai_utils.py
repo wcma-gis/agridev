@@ -2,6 +2,7 @@ import time
 from openai import OpenAI
 from PIL import Image
 from io import BytesIO
+import config
 
 def get_client(api_key):
     return OpenAI(api_key=api_key)
@@ -26,6 +27,10 @@ def delete_old_files(client, keep_id):
         if f.id != keep_id:
             client.files.delete(f.id)
             print(f"Deleted file {f.id}")
+
+def get_all_files():
+    client = get_client(config.api_key)
+    return client.files.list().data
 
 def send_message(client, thread_id, user_input, file_id=None, first=False):
     client.beta.threads.messages.create(
