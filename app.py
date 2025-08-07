@@ -18,8 +18,8 @@ m = folium.Map(location=[center_lat, center_lon], zoom_start=6)
 for _, row in df.iterrows():
     folium.Marker(
         location=[row["lat"], row["lon"]],
-        popup=row["station"],
-        tooltip=row["station"]
+        icon=folium.DivIcon(html=f"""<div style="font-size: 10pt">{row["site"]}</div>"""),
+        popup=row["site"]
     ).add_to(m)
 
 map_data = st_folium(m, width=700, height=500)
@@ -27,5 +27,5 @@ map_data = st_folium(m, width=700, height=500)
 if map_data.get("last_object_clicked_popup"):
     station = map_data["last_object_clicked_popup"]
     st.session_state.selected_station = station
-    st.success(f"Launching AgriBot for station: {station}")
-    st.stop()
+    st.switch_page("chatbot.py")
+
